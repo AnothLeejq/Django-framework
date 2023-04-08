@@ -1,0 +1,55 @@
+**The application accept two formats of input : list or special string**
+
+1. 1 uses list as circuit
+{"circuit":[{"axis":"X","amount":120},{"axis":"Y","amount":120}]}
+
+1.2 test cases for error detection
+
+#normal inputs
+
+{"circuit":[{"axis":"x","amount":120},{"axis":"y","amount":120}]}
+{"circuit":[{"axis":"z","amount":140},{"axis":"X","amount":120}]}
+{"circuit":[{"axis":"z","amount":140},{"axis":"X","amount":120},{"axis":"X","amount":120},{"axis":"X","amount":120},{"axis":"x","amount":120},{"axis":"X","amount":120}]}
+{"circuit":[{"axis":"z","amount":140},{"axis":"X","amount":120},{"axis":"y","amount":180}]}
+
+#abnormal inputs
+
+//json without "circuit" key
+{"1":[]}
+{"key":[{"axis":"x","amount":120},{"axis":"y","amount":120}]}  
+
+//circuit is not a list
+{"circuit":10}
+{"circuit":"[{"axis":"x","amount":120}]"}
+{"circuit":{"axis":"x","amount":120}} 
+
+//elements of list invalid, or do not contains key
+{"circuit":[{"a":"x","amount":120}]}
+{"circuit":[{"axis":"a","amount":120},{"axis":"X","amount":120}]}
+{"circuit":[{"axis":"x","amount":"120"},{"axis":"X","amount":120}]}
+{"circuit":[{"axis":"x","amount":120},{"axis":5,"amount":120}]}
+
+2.1 use specific format of string as circuit
+{"circuit":"X(90),Y(180),X(30)"}
+
+2.2 test cases for error detection
+#normal inputs
+{"circuit":"X(90),Y(180),X(30)"}
+{"circuit":"x(20),Z(190),y(30)"}
+{"circuit":"x(20),x(190),x(30)"}
+{"circuit":"x(20),x(190),x(30),x(190),x(190),x(190),x(190),x(190),x(190)"}
+
+#abnormal inputs
+
+//json without "circuit" key
+{"1":"x(90),y(180),a(30)"}
+
+//wrong content type
+{"circuit":12}
+{"circuit":["x(90),y(180),a(30)"]}
+
+//wrong content format 
+{"circuit":"x(90),y(180),a(30)"}
+{"circuit":"x("X"),y(180),a(30)"}
+{"circuit":"x(90)y(180),a(30)"}
+{"circuit":"x(90"}
